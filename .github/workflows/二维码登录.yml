@@ -125,7 +125,7 @@ jobs:
           PAT: ${{ secrets.PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-      - name: 清理本次二维码 Release 与 Tag
+     # - name: 清理本次二维码 Release 与 Tag
         if: ${{ always() && steps.publish.outcome == 'success' }}
         continue-on-error: true
         env:
@@ -140,7 +140,7 @@ jobs:
           git push --delete origin "$TAG" 2>/dev/null \
             && echo "✅ 已删除远程 Tag: $TAG" || echo "ℹ️ 远程 Tag $TAG 不存在或已清理"
 
-      - name: 清理旧的二维码 Release 与 Tag
+     # - name: 清理旧的二维码 Release 与 Tag
         if: ${{ always() }}
         continue-on-error: true
         env:

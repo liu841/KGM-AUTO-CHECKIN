@@ -2,10 +2,12 @@ name: 签到
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 17 * * *'
+    - cron: '0 16 * * *'
+
 permissions:
   contents: read
   actions: write
+
 jobs:
   run:
     runs-on: ubuntu-latest

@@ -125,32 +125,32 @@ jobs:
           PAT: ${{ secrets.PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
-     # - name: 清理本次二维码 Release 与 Tag
-        if: ${{ always() && steps.publish.outcome == 'success' }}
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          TAG="qr-${{ github.run_id }}"
-          # 删除 Release（--cleanup-tag 同时删除关联的 Git Tag）
-          gh release delete "$TAG" --repo "$GITHUB_REPOSITORY" -y --cleanup-tag 2>/dev/null \
-            && echo "✅ 已删除本次 Release 与 Tag: $TAG" || echo "⚠️ Release $TAG 不存在或已删除"
-          # 兜底：确保 Git Tag 也被删除（防止旧版本 gh 不支持 --cleanup-tag）
-          git tag -d "$TAG" 2>/dev/null || true
-          git push --delete origin "$TAG" 2>/dev/null \
-            && echo "✅ 已删除远程 Tag: $TAG" || echo "ℹ️ 远程 Tag $TAG 不存在或已清理"
+# - name: 清理本次二维码 Release 与 Tag
+#   if: ${{ always() && steps.publish.outcome == 'success' }}
+#   continue-on-error: true
+#   env:
+#     GH_TOKEN: ${{ github.token }}
+#   run: |
+#     TAG="or-${{ github.run_id }}"
+#     gh release delete "${TAG}" --repo "${GITHUB_REPOSITORY}" -y --cleanup-tag 2>/dev/null || true
+#     # 删除 Release (--cleanup-tag 同时删除关联的 Git Tag)
+#     & echo "✅ 已删除本次 Release 与 Tag: ${TAG}" || echo "⚠️ Release TAG 不存在或已删除"
+#     # 兜底: 确保 Git Tag 也被删除 (防止旧版本 gh 不支持 --cleanup-tag)
+#     git tag -d "${TAG}" 2>/dev/null || true
+#     git push --delete origin "${TAG}" 2>/dev/null || true
+#     & echo "✅ 已删除远程 Tag: ${TAG}" || echo "ℹ️ 远程 Tag 不存在或已清理"
 
-     # - name: 清理旧的二维码 Release 与 Tag
-        if: ${{ always() }}
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release list --repo "$GITHUB_REPOSITORY" --limit 100 \
-            | awk '$1 ~ /^qr-/ {print $1}' | head -n -3 \
-            | while read t; do
-                gh release delete "$t" --repo "$GITHUB_REPOSITORY" -y --cleanup-tag 2>/dev/null
-                git tag -d "$t" 2>/dev/null || true
-                git push --delete origin "$t" 2>/dev/null || true
-                echo "已删除旧 Release 与 Tag: $t"
-              done || true
+# - name: 清理旧的二维码 Release 与 Tag
+#   if: ${{ always() }}
+#   continue-on-error: true
+#   env:
+#     GH_TOKEN: ${{ github.token }}
+#   run: |
+#     gh release list --repo "${GITHUB_REPOSITORY}" --limit 100 \
+#     | awk '$1 ~ /^qr-/ {print $1}' | head -n 3 \
+#     | while read t; do
+#       gh release delete "${t}" --repo "${GITHUB_REPOSITORY}" -y --cleanup-tag 2>/dev/null || true
+#       git tag -d "${t}" 2>/dev/null || true
+#       git push --delete origin "${t}" 2>/dev/null || true
+#       echo "✅已删除旧 Release 与 Tag: $t"
+#     done || true

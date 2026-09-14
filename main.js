@@ -106,7 +106,7 @@ async function main() {
           if (ad.status === 1) {
             printGreen(`第${i}次领取成功`)
             claimCount++
-            if (i != 8) {
+            if (i != 2) {
               await delay(30 * 1000)
             }
           } else if (ad.error_code === 30002) {

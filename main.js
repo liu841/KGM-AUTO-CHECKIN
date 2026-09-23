@@ -100,12 +100,18 @@ async function main() {
         printYellow("开始领取VIP...")
         let claimCount = 0
         let claimTotal = 0
+        const MAX_SUCCESS = 2; // ✅ 修改这里：想要成功领几次就填几，当前是2次
         for (let i = 1; i <= 8; i++) {
           const ad = await send(`/youth/vip?timestrap=${Date.now()}`, "GET", headers)
           claimTotal = i
           if (ad.status === 1) {
             printGreen(`第${i}次领取成功`)
             claimCount++
+            // ✅ 核心改动：成功次数达到设定值，直接跳出循环，不再继续领取
+            if (claimCount >= MAX_SUCCESS) {
+              printGreen(`✅ 已经成功领取${MAX_SUCCESS}次，停止VIP领取！`)
+              break;
+            }
             if (i != 2) {
               await delay(30 * 1000)
             }
